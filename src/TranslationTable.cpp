@@ -7,7 +7,7 @@
 using namespace LBP;
 
 TranslationTable::TranslationTable(){
-
+	_loaded=false;
 }
 
 TranslationTable::TranslationTable(char* buffer):TranslationTable(){
@@ -19,6 +19,8 @@ TranslationTable::TranslationTable(std::fstream* stream):TranslationTable(){
 }
 
 void TranslationTable::load(char* buffer){
+
+	if(_loaded) throw lbp_error("Translation Table already loaded");
 
 	//Read entry count
 	unsigned int numEntries;
@@ -58,9 +60,13 @@ void TranslationTable::load(char* buffer){
 
 	}
 
+	_loaded=true;
+
 }
 
 void TranslationTable::load(std::fstream* stream){
+
+	if(_loaded) throw lbp_error("Translation Table already loaded");
 
 	//Read entry count
 	unsigned int numEntries;
@@ -99,9 +105,13 @@ void TranslationTable::load(std::fstream* stream){
 
 	}
 
+	_loaded=true;
+
 }
 
 char* TranslationTable::write(unsigned int& length){
+
+	if(!_loaded) throw lbp_error("Translation Table not yet loaded");
 
 	//Calculate buffer length
 	length=4+_entries.size()*8;
@@ -158,6 +168,8 @@ char* TranslationTable::write(unsigned int& length){
 
 void TranslationTable::write(std::fstream* stream){
 
+	if(!_loaded) throw lbp_error("Translation Table not yet loaded");
+
 	//Write entry count
 	unsigned int numEntries = _keyIndices.size();
 	numEntries=bigToSystem(numEntries);
@@ -208,6 +220,7 @@ std::u16string TranslationTable::getEntry(unsigned int entryKey){
 
 void TranslationTable::setEntry(unsigned int entryKey,std::u16string entry){
 
+	_loaded=true;
 	if(!_entries.contains(entryKey)) _keyIndices.push_back(entryKey);
 	_entries[entryKey]=entry;
 
@@ -216,6 +229,13 @@ void TranslationTable::setEntry(unsigned int entryKey,std::u16string entry){
 void TranslationTable::removeEntry(unsigned int entryKey){
 
 	if(!_entries.contains(entryKey)) throw lbp_error("Translation entry not found");
+	_entries.erase(entryKey);
+	for(unsigned int i=0;i<_keyIndices.size();i++){
+		if(_keyIndices[i]==entryKey){
+			_keyIndices.erase(_keyIndices.begin()+i);
+			break;
+		}
+	}
 
 }
 

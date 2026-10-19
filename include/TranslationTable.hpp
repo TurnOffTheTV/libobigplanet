@@ -32,6 +32,7 @@ namespace LBP {
 
 		private:
 
+			bool _loaded;
 			std::vector<unsigned int> _keyIndices;
 			std::unordered_map<unsigned int,std::u16string> _entries;
 
