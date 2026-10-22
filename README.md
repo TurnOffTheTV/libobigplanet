@@ -21,4 +21,4 @@ This library doesn't support FART/MAP files. For one that does, see [wtfarc](htt
 
 Requires zlib.
 
-Credit to ennuo's cwlib for reference.
+Credit to ennuo's [cwlib](https://github.com/ennuo/toolkit/tree/main/lib/cwlib) for reference.
