@@ -18,3 +18,6 @@ include(GNUInstallDirs)
 
 install(TARGETS libobigplanet DESTINATION lib/libobigplanet)
 install(FILES ${INCLUDES} DESTINATION include/libobigplanet)
+
+enable_testing()
+add_subdirectory(test)
