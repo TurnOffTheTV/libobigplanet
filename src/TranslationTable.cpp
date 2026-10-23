@@ -157,7 +157,10 @@ std::string TranslationTable::write(){
 
 	//Create json
 	nlohmann::json obj;
-	for(uint32_t i=0;i<_keyIndices.size();i++) obj[std::to_string(_keyIndices[i])]=utf8::utf16to8(_entries[_keyIndices[i]]);
+	for(uint32_t i=0;i<_keyIndices.size();i++){
+		std::string entryString = utf8::utf16to8(_entries[_keyIndices[i]]);
+		obj[std::to_string(_keyIndices[i])]=entryString;
+	}
 	return obj.dump(2,' ',true);
 
 }

@@ -43,7 +43,7 @@ jobs:
             c_compiler: cl
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
