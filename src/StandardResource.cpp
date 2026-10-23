@@ -88,7 +88,7 @@ void StandardResource::load(std::iostream& stream){
 				uint16_t unk1;
 				memcpy(&unk1,fileDataBuffer+offset,sizeof(unk1));
 				unk1=bigToSystem(unk1);
-				if(unk1!=1) throw lbp_error("unk1 is not 0x0001, is actually 0x"+bufferToHexString(reinterpret_cast<uint8_t*>(&unk1),2));
+				if(unk1!=1) throw lbp_error("unk1 is not 0x0001");
 				offset+=sizeof(unk1);
 
 				//Chunk reading variables
@@ -119,8 +119,6 @@ void StandardResource::load(std::iostream& stream){
 					offset+=sizeof(dcmpSize);
 
 				}
-
-				std::cout << "cmp offset " << offset << std::endl;
 
 				//Decompress data
 				char* decompressedBuffer = new char[_dataLength];
