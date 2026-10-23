@@ -1,6 +1,7 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#include <cstdint>
 #include <string>
 
 namespace LBP {
