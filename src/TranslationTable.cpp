@@ -1,5 +1,7 @@
 #include <cstring>
 #include <iostream>
+#include <nlohmann/json.hpp>
+#include <utf8.h>
 #include <endianness.hpp>
 #include <lbp_error.hpp>
 #include <TranslationTable.hpp>
@@ -12,6 +14,10 @@ TranslationTable::TranslationTable(){
 
 TranslationTable::TranslationTable(std::iostream& stream):TranslationTable(){
 	load(stream);
+}
+
+TranslationTable::TranslationTable(std::string json):TranslationTable(){
+	load(json);
 }
 
 void TranslationTable::load(std::iostream& stream){
@@ -50,8 +56,51 @@ void TranslationTable::load(std::iostream& stream){
 		stream.seekg(pos,std::ios::beg);
 
 		//Set entry
-		_keyIndices.push_back(entryKey);
-		_entries[entryKey]=entryString;
+		setEntry(entryKey,entryString);
+
+	}
+
+	_loaded=true;
+
+}
+
+void TranslationTable::load(std::string json){
+
+	nlohmann::json obj = nlohmann::json::parse(json);
+	for (auto item = obj.begin();item!=obj.end();item++){
+
+		//Read entry key
+		uint32_t entryKey = std::stoul(item.key());
+
+		//Read string data
+		std::string entryValue = item.value();
+		std::u16string entryString;
+		char16_t entryChar;
+		for(size_t i=0;i<entryValue.size();i++){
+			if(entryValue[i]=='\\' && entryValue[i+1]=='u'){
+				
+				std::string codePoint;
+				codePoint.push_back(entryValue[i+2]);
+				codePoint.push_back(entryValue[i+3]);
+				codePoint.push_back(entryValue[i+4]);
+				codePoint.push_back(entryValue[i+5]);
+
+				entryChar=std::stoi(codePoint);
+
+				i+=5;
+
+			}else{
+
+				entryChar=entryValue[i];
+				entryChar=bigToSystem(entryChar);
+
+			}
+
+			entryChar=bigToSystem(entryChar);
+			entryString.push_back(entryChar);
+		}
+
+		setEntry(entryKey,entryString);
 
 	}
 
@@ -101,6 +150,15 @@ void TranslationTable::write(std::iostream& stream){
 		}
 
 	}
+
+}
+
+std::string TranslationTable::write(){
+
+	//Create json
+	nlohmann::json obj;
+	for(uint32_t i=0;i<_keyIndices.size();i++) obj[std::to_string(_keyIndices[i])]=utf8::utf16to8(_entries[_keyIndices[i]]);
+	return obj.dump(2,' ',true);
 
 }
 

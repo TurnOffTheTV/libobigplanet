@@ -19,6 +19,6 @@ In-progress/planned formats:
 
 This library doesn't support FART/MAP files. For one that does, see [wtfarc](https://github.com/TurnOffTheTV/wtfarc).
 
-Requires zlib.
+Requires nlohmann-json, utf8cpp, and zlib.
 
 Credit to ennuo's [cwlib](https://github.com/ennuo/toolkit/tree/main/lib/cwlib) for reference.

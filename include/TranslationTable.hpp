@@ -14,10 +14,13 @@ namespace LBP {
 		public:
 			TranslationTable();
 			TranslationTable(std::iostream& stream);
+			TranslationTable(std::string json);
 
 			void load(std::iostream& stream);
+			void load(std::string json);
 
 			void write(std::iostream& stream);
+			std::string write();
 
 			uint32_t getNumEntries(){return _keyIndices.size();}
 			uint32_t getEntryKey(uint32_t index){return _keyIndices[index];}

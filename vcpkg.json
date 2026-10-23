@@ -2,6 +2,8 @@
 	"name": "libobigplanet",
 	"version": "1.0.0",
 	"dependencies": [
+		"nlohmann-json",
+		"utf8cpp",
 		"zlib"
 	]
 }

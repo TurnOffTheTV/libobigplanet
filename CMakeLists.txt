@@ -9,7 +9,12 @@ file(GLOB INCLUDES include/*.hpp)
 add_library(libobigplanet STATIC ${SRCS})
 set_target_properties(libobigplanet PROPERTIES PREFIX "")
 target_include_directories(libobigplanet PUBLIC include)
-target_include_directories(libobigplanet PRIVATE third_party)
+
+find_package(nlohmann_json REQUIRED)
+target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json)
+
+find_package(utf8cpp REQUIRED)
+target_link_libraries(libobigplanet PRIVATE utf8cpp::utf8cpp)
 
 find_package(ZLIB REQUIRED)
 target_link_libraries(libobigplanet PRIVATE ZLIB::ZLIB)

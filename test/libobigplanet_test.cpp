@@ -12,9 +12,31 @@ TEST(TranslationTable,ParsesValidTrans){
 		LBP::TranslationTable introTable(introFile);
 
 		EXPECT_EQ(introTable.getNumEntries(),14);
-		EXPECT_EQ(introTable.getEntry("LBP1_INTRO_LINE5"),u"Where does it all go?");
+		EXPECT_EQ(introTable.getEntry("LBP1_INTRO_LINE2"),u"...'The Orb of Dreamers'.");
 
 		introFile.close();
+
+	});
+
+}
+
+TEST(TranslationTable,ParsesValidJson){
+
+	//LBP::TranslationTable parses valid Toolkit translation json file properly and without errors
+
+	EXPECT_NO_THROW({
+
+		std::fstream introFile(std::string(FILES_DIR)+"/intro.trans.json",std::ios::binary|std::ios::in);
+		std::stringstream introJson;
+		introJson << introFile.rdbuf();
+		introFile.close();
+
+		LBP::TranslationTable introTable(introJson.str());
+
+		EXPECT_EQ(introTable.getNumEntries(),14);
+		EXPECT_EQ(introTable.getEntry("LBP1_INTRO_LINE2"),u"...'The Orb of Dreamers'.");
+
+		
 
 	});
 
