@@ -1,7 +1,8 @@
 #ifndef TRANSLATIONTABLE_HPP
 #define TRANSLATIONTABLE_HPP
 
-#include <fstream>
+#include <cstdint>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -12,31 +13,28 @@ namespace LBP {
 
 		public:
 			TranslationTable();
-			TranslationTable(char* buffer);
-			TranslationTable(std::fstream* stream);
+			TranslationTable(std::iostream& stream);
 
-			void load(char* buffer);
-			void load(std::fstream* stream);
+			void load(std::iostream& stream);
 
-			char* write(unsigned int& length);
-			void write(std::fstream* stream);
+			void write(std::iostream& stream);
 
-			unsigned int getNumEntries(){return _keyIndices.size();}
-			unsigned int getEntryKey(unsigned int index){return _keyIndices[index];}
-			std::u16string getEntry(unsigned int entryKey);
+			uint32_t getNumEntries(){return _keyIndices.size();}
+			uint32_t getEntryKey(uint32_t index){return _keyIndices[index];}
+			std::u16string getEntry(uint32_t entryKey);
 			std::u16string getEntry(std::string translationTag){return getEntry(_transTagToKey(translationTag));}
-			void setEntry(unsigned int entryKey,std::u16string entry);
+			void setEntry(uint32_t entryKey,std::u16string entry);
 			void setEntry(std::string translationTag,std::u16string entry){setEntry(_transTagToKey(translationTag),entry);}
-			void removeEntry(unsigned int entryKey);
+			void removeEntry(uint32_t entryKey);
 			void removeEntry(std::string translationTag){removeEntry(_transTagToKey(translationTag));}
 
 		private:
 
 			bool _loaded;
-			std::vector<unsigned int> _keyIndices;
-			std::unordered_map<unsigned int,std::u16string> _entries;
+			std::vector<uint32_t> _keyIndices;
+			std::unordered_map<uint32_t,std::u16string> _entries;
 
-			unsigned int _transTagToKey(std::string tag);
+			uint32_t _transTagToKey(std::string tag);
 
 	};
 
