@@ -18,6 +18,9 @@ target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json utf8cpp
 if(MSVC)
 	add_compile_definitions(UTF_CPP_CPLUSPLUS=202302L)
 	add_compile_options(/Zc:__cplusplus)
+	target_compile_options(libobigplanet PRIVATE /wd4066)
+else()
+	target_compile_options(libobigplanet PRIVATE -Wno-multichar)
 endif()
 
 include(GNUInstallDirs)

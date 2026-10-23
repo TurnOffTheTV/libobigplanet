@@ -1,0 +1,59 @@
+MUSt
+MasterVolume	1
+TrackTranslatedTag	"ENGLISH_GARDEN_IMUSIC"
+IsCopyrighted	false
+StereoPairs	6
+	[0]	
+		MusicStemTranslatedTag	"MUSIC_STEM_AMBIENT_FX"
+		SliderIndex	0
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	0.6
+		RearSend	0.7
+		Trigger	false
+	[1]	
+		MusicStemTranslatedTag	"MUSIC_STEM_BASS"
+		SliderIndex	1
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	1
+		RearSend	0
+		Trigger	false
+	[2]	
+		MusicStemTranslatedTag	"MUSIC_STEM_DRUMS"
+		SliderIndex	2
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	0.9
+		RearSend	0.2
+		Trigger	false
+	[3]	
+		MusicStemTranslatedTag	"MUSIC_STEM_ACCOMPANIMENT_A"
+		SliderIndex	3
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	0.75
+		RearSend	0.5
+		Trigger	false
+	[4]	
+		MusicStemTranslatedTag	"MUSIC_STEM_ACCOMPANIMENT_B"
+		SliderIndex	4
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	0.9
+		RearSend	0.8
+		Trigger	false
+	[5]	
+		MusicStemTranslatedTag	"MUSIC_STEM_MELODY"
+		SliderIndex	5
+		Fade	2.2
+		FadeIn	2.2
+		FadeOut	1
+		ForwardSend	0.9
+		RearSend	0.4
+		Trigger	false
