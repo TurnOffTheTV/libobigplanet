@@ -1,5 +1,4 @@
 #include <cstring>
-#include <spanstream>
 #include <zlib.h>
 #include <endianness.hpp>
 #include <hex.hpp>
@@ -121,17 +120,15 @@ void StandardResource::load(std::iostream& stream){
 				}
 
 				//Decompress data
+				size_t decOffset = 0;
 				char* decompressedBuffer = new char[_dataLength];
-				std::spanstream decompressedStream(std::span<char>(decompressedBuffer,_dataLength));
 				for(uint16_t i=0;i<numChunks;i++){
 
 					if(chunkCompressedSizes[i]==chunkDecompressedSizes[i]){
 
 						//Directly copy chunk
-						uint8_t* chunk = new uint8_t[chunkCompressedSizes[i]];
-						memcpy(chunk,fileDataBuffer+offset,chunkCompressedSizes[i]);
-						decompressedStream.write(reinterpret_cast<char*>(chunk),chunkCompressedSizes[i]);
-						delete[] chunk;
+						memcpy(decompressedBuffer+decOffset,fileDataBuffer+offset,chunkCompressedSizes[i]);
+						decOffset+=chunkCompressedSizes[i];
 
 					}else{
 
@@ -142,7 +139,8 @@ void StandardResource::load(std::iostream& stream){
 						uLongf s = chunkDecompressedSizes[i];
 						int result = uncompress(dcmpChunk,&s,cmpChunk,chunkCompressedSizes[i]);
 						if(result!=Z_OK) throw lbp_error("Decompression error: "+std::to_string(result));
-						decompressedStream.write(reinterpret_cast<char*>(dcmpChunk),chunkDecompressedSizes[i]);
+						memcpy(decompressedBuffer+decOffset,dcmpChunk,chunkDecompressedSizes[i]);
+						decOffset+=chunkDecompressedSizes[i];
 						delete[] cmpChunk;
 						delete[] dcmpChunk;
 
