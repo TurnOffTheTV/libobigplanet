@@ -45,11 +45,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up vcpkg
+    - name: Set up vcpkg (Windows)
       if: runner.os == 'Windows'
       run: |
         git clone https://github.com/microsoft/vcpkg.git vcpkg
         .\vcpkg\bootstrap-vcpkg.bat
+
+    - name: Set up vcpkg (Non-Windows)
+      if: runner.os != 'Windows'
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git vcpkg
+        .\vcpkg\bootstrap-vcpkg.sh
 
     - name: Set reusable strings
       id: strings
