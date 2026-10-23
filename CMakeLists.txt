@@ -16,6 +16,7 @@ find_package(ZLIB REQUIRED)
 target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json utf8cpp::utf8cpp ZLIB::ZLIB)
 
 if(MSVC)
+	add_compile_definitions(UTF_CPP_CPLUSPLUS=202302L)
 	add_compile_options(/Zc:__cplusplus)
 endif()
 
