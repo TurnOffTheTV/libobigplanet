@@ -11,13 +11,9 @@ set_target_properties(libobigplanet PROPERTIES PREFIX "")
 target_include_directories(libobigplanet PUBLIC include)
 
 find_package(nlohmann_json REQUIRED)
-target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json)
-
 find_package(utf8cpp REQUIRED)
-target_link_libraries(libobigplanet PRIVATE utf8cpp::utf8cpp)
-
 find_package(ZLIB REQUIRED)
-target_link_libraries(libobigplanet PRIVATE ZLIB::ZLIB)
+target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json utf8cpp::utf8cpp ZLIB::ZLIB)
 
 include(GNUInstallDirs)
 
