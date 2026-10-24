@@ -63,7 +63,7 @@ jobs:
 
       - name: Run CTest
         working-directory: ${{github.workspace}}/build
-        run: ctest --build-config --output-on-failure
+        run: ctest --output-on-failure
 
   build-and-test-ppc:
     name: Build and Test - PowerPC
@@ -94,7 +94,7 @@ jobs:
             -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
             -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
             -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
-            -DCMAKE_CROSSCOMPILING_EMULATOR="qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
+            "-DCMAKE_CROSSCOMPILING_EMULATOR=qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
 
       - name: Build Project
         run: |
