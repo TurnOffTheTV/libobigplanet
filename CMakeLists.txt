@@ -16,15 +16,18 @@ target_include_directories(libobigplanet
 		${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-include(FetchContent)
-FetchContent_Declare(zlib GIT_REPOSITORY https://github.com/madler/zlib.git GIT_TAG v1.3.1)
-set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(zlib)
-add_library(ZLIB::ZLIB ALIAS zlib)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64" AND NOT CMAKE_SYSTEM_PROCESSOR MATCHES "le")
+	include(FetchContent)
+	FetchContent_Declare(zlib GIT_REPOSITORY https://github.com/madler/zlib.git GIT_TAG v1.3.1)
+	set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+	FetchContent_MakeAvailable(zlib)
+	add_library(ZLIB::ZLIB ALIAS zlib)
+else()
+	find_package(ZLIB REQUIRED)
+endif()
 
 find_package(nlohmann_json REQUIRED)
 find_package(utf8cpp REQUIRED)
-# find_package(ZLIB REQUIRED)
 target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json utf8cpp::utf8cpp ZLIB::ZLIB)
 
 if(MSVC)
