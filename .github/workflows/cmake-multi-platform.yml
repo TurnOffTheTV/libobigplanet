@@ -33,7 +33,6 @@ jobs:
         exclude:
           - os: macos-latest
             c_compiler: cl gcc
-            cpp_compiler: g++
           - os: windows-latest
             c_compiler: gcc
           - os: windows-latest
