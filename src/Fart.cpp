@@ -1,5 +1,5 @@
 #include <cstring>
-#include <openssl/sha.h>
+#include <sha1.hpp>
 #include <lbp/Fart.hpp>
 #include <endianness.hpp>
 #include <hex.hpp>
@@ -277,10 +277,10 @@ std::string Fart::addEntry(std::iostream& stream,uint32_t length){
 	stream.read(buffer,length);
 
 	//Get hash of data
-	uint8_t* hashBuffer = new uint8_t[20];
-	SHA1(reinterpret_cast<const unsigned char*>(buffer),length,hashBuffer);
-	std::string hash = bufferToHexString(hashBuffer,20);
-	delete[] hashBuffer;
+	SHA1 hashGen;
+	hashGen.update(std::string(reinterpret_cast<const char*>(buffer),length));
+	std::string hashBuffer = hashGen.final();
+	std::string hash = bufferToHexString((uint8_t*)(hashBuffer.c_str()),20);
 
 	//Set in hash indices and hash map
 	_numEntries++;

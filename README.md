@@ -19,6 +19,6 @@ In-progress/planned formats:
 * Font (.fnt)
 * Text-based formats (.mus, .joint, .gsub, etc)
 
-Requires nlohmann-json, OpenSSL, utf8cpp, and zlib.
+Requires nlohmann-json, utf8cpp, and zlib.
 
 Credit to ennuo's [cwlib](https://github.com/ennuo/toolkit/tree/main/lib/cwlib) for reference.
