@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and Test
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -21,8 +22,8 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
           - os: macos-latest
-            c_compiler: gcc
-            cpp_compiler: g++
+            c_compiler: brew-gcc
+            cpp_compiler: brew-g++
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
@@ -44,6 +45,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+
+    - name: Install macOS GCC
+      if: matrix.os == 'macos-latest' && matrix.c_compiler == 'brew-gcc'
+      run: |
+          brew install gcc
+
+    - name: Set up ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ matrix.os }}-${{ matrix.c_compiler }}
 
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
@@ -69,3 +80,30 @@ jobs:
     - name: Run CTest
       working-directory: ${{github.workspace}}/build
       run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
+
+  build-and-test-ppc:
+    name: Build and Test - PowerPC
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ppc64
+
+      - name: Run Tests in Big-Endian PowerPC Container
+        run: |
+          docker run --rm --platform linux/ppc64 \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            debian:unstable \
+            bash -c "
+              apt-get update && apt-get install -y g++ cmake make
+              cmake -S . -B build
+              cd build
+              make -j$(nproc)
+              ctest --output-on-failure
+            "
