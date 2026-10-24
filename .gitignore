@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,visualstudiocode,linux,macos,windows
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake,visualstudiocode,linux,macos,windows
+# Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,visualstudiocode,linux,macos,windows,vcpkg
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake,visualstudiocode,linux,macos,windows,vcpkg
 
 ### C++ ###
 # Prerequisites
@@ -102,6 +102,14 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
+### vcpkg ###
+# Vcpkg
+
+vcpkg-manifest-install.log
+
+## Manifest Mode
+vcpkg_installed/
+
 ### VisualStudioCode ###
 .vscode/*
 
@@ -142,6 +150,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/c++,cmake,visualstudiocode,linux,macos,windows
+# End of https://www.toptal.com/developers/gitignore/api/c++,cmake,visualstudiocode,linux,macos,windows,vcpkg
 
 /build
