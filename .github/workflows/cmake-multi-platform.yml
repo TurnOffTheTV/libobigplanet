@@ -32,7 +32,7 @@ jobs:
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
-            c_compiler: cl gcc
+            c_compiler: [cl, gcc]
           - os: windows-latest
             c_compiler: gcc
           - os: windows-latest
@@ -89,7 +89,8 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: all
+          platforms: ppc64
+          image: tonistiigi/binfmt:qemu-v7.0.0
 
       - name: Run Tests in Big-Endian PowerPC Container
         run: |
