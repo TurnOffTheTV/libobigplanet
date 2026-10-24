@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 set(CMAKE_CXX_STANDARD 23)
 
-project(libobigplanet)
+project(libobigplanet VERSION 0.2.0)
 
 file(GLOB SRCS src/*.cpp)
 file(GLOB INCLUDES include/*.hpp)
