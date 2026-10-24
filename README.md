@@ -4,6 +4,8 @@ C++ library for reading/writing and manipulating files from the LittleBigPlanet 
 
 Fully supported formats:
 
+* FART (.farc, big/littlefart)
+* MAP (.map)
 * Translation Table (.trans)
 
 In-progress/planned formats:
@@ -17,8 +19,6 @@ In-progress/planned formats:
 * Font (.fnt)
 * Text-based formats (.mus, .joint, .gsub, etc)
 
-This library doesn't support FART/MAP files. For one that does, see [wtfarc](https://github.com/TurnOffTheTV/wtfarc).
-
-Requires nlohmann-json, utf8cpp, and zlib.
+Requires nlohmann-json, OpenSSL, utf8cpp, and zlib.
 
 Credit to ennuo's [cwlib](https://github.com/ennuo/toolkit/tree/main/lib/cwlib) for reference.

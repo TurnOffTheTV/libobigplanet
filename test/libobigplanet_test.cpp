@@ -1,7 +1,124 @@
 #include <fstream>
 #include <gtest/gtest.h>
+#include <Fart.hpp>
+#include <Map.hpp>
 #include <StandardResource.hpp>
 #include <TranslationTable.hpp>
+
+TEST(Fart,ParsesValidFARC){
+
+	//LBP::Fart parses valid FARC file properly and without errors
+
+	EXPECT_NO_THROW({
+
+		std::fstream farcFile(std::string(FILES_DIR)+"/intro.farc",std::ios::binary|std::ios::in);
+		LBP::Fart farc(farcFile);
+
+		EXPECT_EQ(farc.getNumEntries(),2);
+
+		farcFile.close();
+
+	});
+
+}
+
+TEST(Fart,ParsesValidFAR4){
+
+	//LBP::Fart parses valid FAR4 save file properly and without errors
+
+	EXPECT_NO_THROW({
+
+		std::fstream far4File(std::string(FILES_DIR)+"/bigfart69",std::ios::binary|std::ios::in);
+		LBP::Fart far4(far4File);
+
+		EXPECT_EQ(far4.getNumEntries(),1);
+
+		far4File.close();
+
+	});
+
+}
+
+TEST(Fart,WritesDuplicateFiles){
+
+	//LBP::Fart outputs identical files
+
+	EXPECT_NO_THROW({
+
+		std::fstream farcFile(std::string(FILES_DIR)+"/intro.farc",std::ios::binary|std::ios::in);
+		std::fstream far4File(std::string(FILES_DIR)+"/bigfart69",std::ios::binary|std::ios::in);
+
+		LBP::Fart farc(farcFile);
+		LBP::Fart far4(far4File);
+		
+		std::stringstream farcSource;
+		std::stringstream far4Source;
+		std::stringstream farcResult;
+		std::stringstream far4Result;
+
+		farcFile.clear();
+		far4File.clear();
+		farcFile.seekg(0,std::ios::beg);
+		far4File.seekg(0,std::ios::beg);
+		farcSource << farcFile.rdbuf();
+		far4Source << far4File.rdbuf();
+
+		farc.write(farcResult);
+		far4.write(far4Result);
+
+		farcFile.close();
+		far4File.close();
+
+		EXPECT_EQ(farcSource.str(),farcResult.str());
+		EXPECT_EQ(far4Source.str(),far4Result.str());
+
+	});
+
+}
+
+TEST(Map,ParsesValidMAP){
+
+	//LBP::Map parses valid MAP file properly and without errors
+
+	EXPECT_NO_THROW({
+
+		std::fstream mapFile(std::string(FILES_DIR)+"/intro.map",std::ios::binary|std::ios::in);
+		LBP::Map map(mapFile);
+
+		EXPECT_EQ(map.getNumEntries(),3);
+
+		mapFile.close();
+
+	});
+
+}
+
+TEST(Map,WritesDuplicateMAP){
+
+	//LBP::Map outputs identical files
+
+	EXPECT_NO_THROW({
+
+		std::fstream mapFile(std::string(FILES_DIR)+"/intro.map",std::ios::binary|std::ios::in);
+
+		LBP::Map map(mapFile);
+
+		std::stringstream mapSource;
+		std::stringstream mapResult;
+
+		mapFile.clear();
+		mapFile.seekg(0,std::ios::beg);
+		mapSource << mapFile.rdbuf();
+
+		map.write(mapResult);
+
+		mapFile.close();
+
+		EXPECT_EQ(mapSource.str(),mapResult.str());
+
+	});
+
+}
 
 TEST(TranslationTable,ParsesValidTrans){
 

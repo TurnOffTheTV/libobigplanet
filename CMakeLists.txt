@@ -11,9 +11,10 @@ set_target_properties(libobigplanet PROPERTIES PREFIX "")
 target_include_directories(libobigplanet PUBLIC include)
 
 find_package(nlohmann_json REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(utf8cpp REQUIRED)
 find_package(ZLIB REQUIRED)
-target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json utf8cpp::utf8cpp ZLIB::ZLIB)
+target_link_libraries(libobigplanet PRIVATE nlohmann_json::nlohmann_json OpenSSL::Crypto utf8cpp::utf8cpp ZLIB::ZLIB)
 
 if(MSVC)
 	add_compile_definitions(UTF_CPP_CPLUSPLUS=202302L)
