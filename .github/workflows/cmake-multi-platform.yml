@@ -29,41 +29,41 @@ jobs:
             cpp_compiler: clang++
 
     steps:
-    - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-    - name: Install macOS GCC
-      if: matrix.os == 'macos-latest'
-      run: |
-          brew install gcc
+      - name: Install macOS GCC
+        if: matrix.os == 'macos-latest'
+        run: |
+            brew install gcc
 
-    - name: Set up ccache
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        key: ${{ matrix.os }}-${{ matrix.c_compiler }}
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.c_compiler }}
 
-    - name: Set up vcpkg
-      uses: lukka/run-vcpkg@v11
+      - name: Set up vcpkg
+        uses: lukka/run-vcpkg@v11
 
-    - name: Set reusable strings
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Configure CMake
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        -S ${{ github.workspace }}
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+          -S ${{ github.workspace }}
 
-    - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
 
-    - name: Run CTest
-      working-directory: ${{github.workspace}}/build
-      run: ctest --build-config --output-on-failure
+      - name: Run CTest
+        working-directory: ${{github.workspace}}/build
+        run: ctest --build-config --output-on-failure
 
   build-and-test-ppc:
     name: Build and Test - PowerPC
@@ -72,6 +72,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
+
+      - name: Set up vcpkg
+        uses: lukka/run-vcpkg@v11
 
       - name: Install Cross-Compiler and QEMU User-Mode
         run: |
@@ -90,7 +93,7 @@ jobs:
             -DCMAKE_SYSTEM_PROCESSOR=ppc64 \
             -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
             -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
-            # This tells CTest to automatically wrap and run all compiled tests using QEMU
+            -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
             -DCMAKE_CROSSCOMPILING_EMULATOR="qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
 
       - name: Build Project
