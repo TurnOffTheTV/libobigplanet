@@ -76,7 +76,7 @@ jobs:
       - name: Set up vcpkg
         uses: lukka/run-vcpkg@v11
 
-      - name: Install Cross-Compiler and QEMU User-Mode
+      - name: Install APT Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -86,7 +86,7 @@ jobs:
             cmake \
             make
 
-      - name: Configure CMake for Big-Endian PowerPC
+      - name: Configure CMake
         run: |
           cmake -S . -B build \
             -DCMAKE_SYSTEM_NAME=Linux \
@@ -96,11 +96,11 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake" \
             "-DCMAKE_CROSSCOMPILING_EMULATOR=qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
 
-      - name: Build Project
+      - name: Build
         run: |
           cmake --build build -j$(nproc)
 
-      - name: Run Tests via QEMU
+      - name: Run CTest
         run: |
           cd build
           ctest --output-on-failure
