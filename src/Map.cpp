@@ -1,8 +1,8 @@
 #include <cstring>
+#include <iostream>
+#include <lbp/Map.hpp>
 #include <endianness.hpp>
 #include <hex.hpp>
-#include <iostream>
-#include <Map.hpp>
 #include <lbp_error.hpp>
 
 using namespace LBP;

@@ -2,9 +2,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <utf8.h>
+#include <lbp/TranslationTable.hpp>
 #include <endianness.hpp>
 #include <lbp_error.hpp>
-#include <TranslationTable.hpp>
 
 using namespace LBP;
 

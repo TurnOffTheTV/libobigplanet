@@ -8,7 +8,7 @@ namespace LBP {
 	inline constexpr uint32_t DELTA = 0x9e3779b9;
 	inline constexpr uint32_t TEA_KEY[] = {0x01B70CBD,0x149607D6,0x07F94DD5,0x10DB8CA0};
 
-	void btea(uint8_t* data,size_t length,bool shouldDecrypt,const uint32_t key[4]) {
+	inline void btea(uint8_t* data,size_t length,bool shouldDecrypt,const uint32_t key[4]) {
 
 		uint8_t padding = 4-(length%4);
 		length+=padding;

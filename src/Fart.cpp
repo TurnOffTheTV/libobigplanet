@@ -1,8 +1,9 @@
 #include <cstring>
 #include <openssl/sha.h>
+#include <lbp/Fart.hpp>
 #include <endianness.hpp>
-#include <Fart.hpp>
 #include <hex.hpp>
+#include <lbp_error.hpp>
 
 using namespace LBP;
 
@@ -308,6 +309,41 @@ void Fart::removeEntry(std::string hash){
 
 	//Remove from hash map
 	_entries.erase(hash);
+
+}
+
+uint32_t Fart::getSaveUserId(){
+
+	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	return _saveInfo.userId;
+
+}
+
+int32_t Fart::getSaveCopied(){
+
+	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	return _saveInfo.copied;
+
+}
+
+uint32_t Fart::getSaveType(){
+
+	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	return _saveInfo.saveType;
+
+}
+
+std::string Fart::getSaveFileHash(){
+
+	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	return _saveInfo.fileHash;
+
+}
+
+void Fart::setSaveFileHash(std::string hash){
+
+	if(!_entries.contains(hash)) throw lbp_error("Hash not found in FART");
+	_saveInfo.fileHash=hash;
 
 }
 

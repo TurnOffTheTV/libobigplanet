@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
-#include <guid.hpp>
+#include <lbp/guid.hpp>
 
 namespace LBP {
 

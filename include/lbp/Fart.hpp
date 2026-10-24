@@ -7,7 +7,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <lbp_error.hpp>
 
 namespace LBP {
 
@@ -70,17 +69,14 @@ namespace LBP {
 			std::string addEntry(std::iostream& stream,uint32_t length);
 			void removeEntry(std::string hash);
 
-			uint32_t getSaveUserId(){if(_fartType==FARC) throw lbp_error("FARC does not have save info");return _saveInfo.userId;}
+			uint32_t getSaveUserId();
 			void setSaveUserId(uint32_t userId){_saveInfo.userId=userId;}
-
-			int32_t getSaveCopied(){if(_fartType==FARC) throw lbp_error("FARC does not have save info");return _saveInfo.copied;}
+			int32_t getSaveCopied();
 			void setSaveCopied(int32_t copied){_saveInfo.copied=copied;}
-
-			uint32_t getSaveType(){if(_fartType==FARC) throw lbp_error("FARC does not have save info");return _saveInfo.saveType;}
+			uint32_t getSaveType();
 			void setSaveType(uint32_t saveType){_saveInfo.saveType=saveType;}
-
-			std::string getSaveFileHash(){if(_fartType==FARC) throw lbp_error("FARC does not have save info");return _saveInfo.fileHash;}
-			void setSaveFileHash(std::string hash){if(!_entries.contains(hash)) throw lbp_error("Hash not found in FART");_saveInfo.fileHash=hash;}
+			std::string getSaveFileHash();
+			void setSaveFileHash(std::string hash);
 
 		private:
 

@@ -1,9 +1,9 @@
 #include <fstream>
 #include <gtest/gtest.h>
-#include <Fart.hpp>
-#include <Map.hpp>
-#include <StandardResource.hpp>
-#include <TranslationTable.hpp>
+#include <lbp/Fart.hpp>
+#include <lbp/Map.hpp>
+#include <lbp/StandardResource.hpp>
+#include <lbp/TranslationTable.hpp>
 
 TEST(Fart,ParsesValidFARC){
 

@@ -8,7 +8,13 @@ file(GLOB INCLUDES include/*.hpp)
 
 add_library(libobigplanet STATIC ${SRCS})
 set_target_properties(libobigplanet PROPERTIES PREFIX "")
-target_include_directories(libobigplanet PUBLIC include)
+target_include_directories(libobigplanet 
+	PUBLIC 
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
+		$<INSTALL_INTERFACE:include>
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 find_package(nlohmann_json REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -23,11 +29,6 @@ if(MSVC)
 else()
 	target_compile_options(libobigplanet PRIVATE -Wno-multichar)
 endif()
-
-include(GNUInstallDirs)
-
-install(TARGETS libobigplanet DESTINATION lib/libobigplanet)
-install(FILES ${INCLUDES} DESTINATION include/libobigplanet)
 
 enable_testing()
 add_subdirectory(test)

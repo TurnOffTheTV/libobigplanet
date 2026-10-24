@@ -1,9 +1,9 @@
 #include <cstring>
 #include <zlib.h>
+#include <lbp/StandardResource.hpp>
 #include <endianness.hpp>
 #include <hex.hpp>
 #include <lbp_error.hpp>
-#include <StandardResource.hpp>
 #include <xxtea.hpp>
 
 using namespace LBP;
