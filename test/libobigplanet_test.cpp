@@ -11,7 +11,7 @@ TEST(Fart,ParsesValidFARC){
 
 	EXPECT_NO_THROW({
 
-		std::fstream farcFile(std::string(FILES_DIR)+"/intro.farc",std::ios::binary|std::ios::in);
+		std::fstream farcFile(std::string(FILES_DIR)+"/container/intro.farc",std::ios::binary|std::ios::in);
 		LBP::Fart farc(farcFile);
 
 		EXPECT_EQ(farc.getNumEntries(),2);
@@ -28,7 +28,7 @@ TEST(Fart,ParsesValidFAR4){
 
 	EXPECT_NO_THROW({
 
-		std::fstream far4File(std::string(FILES_DIR)+"/bigfart69",std::ios::binary|std::ios::in);
+		std::fstream far4File(std::string(FILES_DIR)+"/container/bigfart69",std::ios::binary|std::ios::in);
 		LBP::Fart far4(far4File);
 
 		EXPECT_EQ(far4.getNumEntries(),1);
@@ -45,8 +45,8 @@ TEST(Fart,WritesDuplicateFiles){
 
 	EXPECT_NO_THROW({
 
-		std::fstream farcFile(std::string(FILES_DIR)+"/intro.farc",std::ios::binary|std::ios::in);
-		std::fstream far4File(std::string(FILES_DIR)+"/bigfart69",std::ios::binary|std::ios::in);
+		std::fstream farcFile(std::string(FILES_DIR)+"/container/intro.farc",std::ios::binary|std::ios::in);
+		std::fstream far4File(std::string(FILES_DIR)+"/container/bigfart69",std::ios::binary|std::ios::in);
 
 		LBP::Fart farc(farcFile);
 		LBP::Fart far4(far4File);
@@ -82,7 +82,7 @@ TEST(Map,ParsesValidMAP){
 
 	EXPECT_NO_THROW({
 
-		std::fstream mapFile(std::string(FILES_DIR)+"/intro.map",std::ios::binary|std::ios::in);
+		std::fstream mapFile(std::string(FILES_DIR)+"/container/intro.map",std::ios::binary|std::ios::in);
 		LBP::Map map(mapFile);
 
 		EXPECT_EQ(map.getNumEntries(),3);
@@ -99,7 +99,7 @@ TEST(Map,WritesDuplicateMAP){
 
 	EXPECT_NO_THROW({
 
-		std::fstream mapFile(std::string(FILES_DIR)+"/intro.map",std::ios::binary|std::ios::in);
+		std::fstream mapFile(std::string(FILES_DIR)+"/container/intro.map",std::ios::binary|std::ios::in);
 
 		LBP::Map map(mapFile);
 
@@ -193,7 +193,7 @@ TEST(StandardResource,ParsesValidPlan){
 
 	EXPECT_NO_THROW({
 
-		std::fstream planFile(std::string(FILES_DIR)+"/palette_primitives_372.plan",std::ios::binary|std::ios::in);
+		std::fstream planFile(std::string(FILES_DIR)+"/things/palette_primitives_372.plan",std::ios::binary|std::ios::in);
 		LBP::StandardResource plan(planFile);
 
 		EXPECT_EQ(plan.getRevision(),0x222);
@@ -211,7 +211,7 @@ TEST(StandardResource,ParsesValidLevel){
 
 	EXPECT_NO_THROW({
 
-		std::fstream lvlFile(std::string(FILES_DIR)+"/intro_level.bin",std::ios::binary|std::ios::in);
+		std::fstream lvlFile(std::string(FILES_DIR)+"/things/intro_level.bin",std::ios::binary|std::ios::in);
 		LBP::StandardResource lvl(lvlFile);
 
 		EXPECT_EQ(lvl.getRevision(),0x235);
@@ -247,7 +247,7 @@ TEST(StandardResource,ParsesValidText){
 
 	EXPECT_NO_THROW({
 
-		std::fstream musFile(std::string(FILES_DIR)+"/i_english_g.mus",std::ios::binary|std::ios::in);
+		std::fstream musFile(std::string(FILES_DIR)+"/text/i_english_g.mus",std::ios::binary|std::ios::in);
 		LBP::StandardResource mus(musFile);
 
 		musFile.close();
