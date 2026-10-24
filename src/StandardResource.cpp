@@ -202,6 +202,7 @@ void StandardResource::load(std::iostream& stream){
 			_dataLength=stream.tellg();
 			stream.clear();
 			stream.seekg(0,std::ios::beg);
+			_data = new uint8_t[_dataLength];
 			stream.read(reinterpret_cast<char*>(_data),_dataLength);
 
 		break;
