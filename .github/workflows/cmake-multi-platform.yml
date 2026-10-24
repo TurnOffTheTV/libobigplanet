@@ -16,7 +16,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         build_type: [Release]
-        c_compiler: [gcc, clang, cl]
         include:
           - os: macos-latest
             c_compiler: clang
@@ -30,15 +29,6 @@ jobs:
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-        exclude:
-          - os: macos-latest
-            c_compiler: [cl, gcc]
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
-          - os: ubuntu-latest
-            c_compiler: cl
 
     steps:
     - uses: actions/checkout@v7
@@ -92,14 +82,24 @@ jobs:
           platforms: ppc64
           image: tonistiigi/binfmt:qemu-v7.0.0
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Big-Endian PPC Environment
+        run: |
+          cat << 'EOF' > Dockerfile.ppc64
+          FROM --platform=linux/ppc64 adelielinux/adelie:latest
+          RUN apk update && apk add --no-cache build-base cmake make bash
+          WORKDIR /workspace
+          EOF
+          docker buildx build --platform linux/ppc64 -t ppc64-test -f Dockerfile.ppc64 --load .
+
       - name: Run Tests in Big-Endian PowerPC Container
         run: |
-          docker run --rm --platform linux/ppc64 \
+          docker run --rm \
             -v ${{ github.workspace }}:/workspace \
-            -w /workspace \
-            adelielinux/adelie:latest \
+            ppc64-test \
             sh -c "
-              apk update && apk add --no-cache build-base cmake make bash &&
               cmake -S . -B build &&
               cd build &&
               make -j$(nproc) &&
