@@ -93,7 +93,7 @@ jobs:
             -DCMAKE_SYSTEM_PROCESSOR=ppc64 \
             -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
             -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
-            -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
+            -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake" \
             "-DCMAKE_CROSSCOMPILING_EMULATOR=qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
 
       - name: Build Project
