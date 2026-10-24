@@ -14,8 +14,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        build_type: [Release]
         include:
           - os: macos-latest
             c_compiler: clang
@@ -57,16 +55,15 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         -S ${{ github.workspace }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
 
     - name: Run CTest
       working-directory: ${{github.workspace}}/build
-      run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
+      run: ctest --build-config --output-on-failure
 
   build-and-test-ppc:
     name: Build and Test - PowerPC
@@ -76,32 +73,31 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ppc64
-          image: tonistiigi/binfmt:qemu-v7.0.0
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Big-Endian PPC Environment
+      - name: Install Cross-Compiler and QEMU User-Mode
         run: |
-          cat << 'EOF' > Dockerfile.ppc64
-          FROM --platform=linux/ppc64 adelielinux/adelie:latest
-          RUN apk update && apk add --no-cache build-base cmake make bash
-          WORKDIR /workspace
-          EOF
-          docker buildx build --platform linux/ppc64 -t ppc64-test -f Dockerfile.ppc64 --load .
+          sudo apt-get update
+          sudo apt-get install -y \
+            g++-powerpc64-linux-gnu \
+            gcc-powerpc64-linux-gnu \
+            qemu-user \
+            cmake \
+            make
 
-      - name: Run Tests in Big-Endian PowerPC Container
+      - name: Configure CMake for Big-Endian PowerPC
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
-            ppc64-test \
-            sh -c "
-              cmake -S . -B build &&
-              cd build &&
-              make -j$(nproc) &&
-              ctest --output-on-failure
-            "
+          cmake -S . -B build \
+            -DCMAKE_SYSTEM_NAME=Linux \
+            -DCMAKE_SYSTEM_PROCESSOR=ppc64 \
+            -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
+            -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
+            # This tells CTest to automatically wrap and run all compiled tests using QEMU
+            -DCMAKE_CROSSCOMPILING_EMULATOR="qemu-ppc64;-L;/usr/powerpc64-linux-gnu"
+
+      - name: Build Project
+        run: |
+          cmake --build build -j$(nproc)
+
+      - name: Run Tests via QEMU
+        run: |
+          cd build
+          ctest --output-on-failure
