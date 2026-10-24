@@ -21,9 +21,6 @@ jobs:
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
-          - os: macos-latest
-            c_compiler: gcc
-            cpp_compiler: g++
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
@@ -35,7 +32,8 @@ jobs:
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
-            c_compiler: cl
+            c_compiler: cl gcc
+            cpp_compiler: g++
           - os: windows-latest
             c_compiler: gcc
           - os: windows-latest
@@ -92,7 +90,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: ppc64
+          platforms: all
 
       - name: Run Tests in Big-Endian PowerPC Container
         run: |
@@ -101,7 +99,7 @@ jobs:
             -w /workspace \
             adelielinux/adelie:latest \
             sh -c "
-              apk add --no-cache build-base cmake make bash &&
+              apk update && apk add --no-cache build-base cmake make bash &&
               cmake -S . -B build &&
               cd build &&
               make -j$(nproc) &&
