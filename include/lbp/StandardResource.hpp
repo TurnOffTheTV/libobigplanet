@@ -22,6 +22,8 @@ namespace LBP {
 			StandardResource(std::iostream& stream);
 			~StandardResource();
 
+			bool isLoaded(){return _loaded;}
+
 			void load(std::iostream& stream);
 
 			void write(std::iostream& stream);
@@ -30,7 +32,7 @@ namespace LBP {
 			void setRevision(uint32_t revision){_revision=revision;}
 			uint32_t getDependencyCount(){return _dependencies.size();}
 
-		private:
+		protected:
 			bool _loaded;
 			char8_t _type[4];
 			uint32_t _revision;

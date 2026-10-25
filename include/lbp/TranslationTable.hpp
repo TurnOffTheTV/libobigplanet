@@ -16,6 +16,8 @@ namespace LBP {
 			TranslationTable(std::iostream& stream);
 			TranslationTable(std::string json);
 
+			bool isLoaded(){return _loaded;}
+
 			void load(std::iostream& stream);
 			void load(std::string json);
 

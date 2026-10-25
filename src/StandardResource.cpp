@@ -28,6 +28,8 @@ StandardResource::~StandardResource(){
 
 void StandardResource::load(std::iostream& stream){
 
+	if(_loaded) throw lbp_error("Resource already loaded");
+
 	uint32_t dependencyTableOffset = 0;
 
 	//Read header
