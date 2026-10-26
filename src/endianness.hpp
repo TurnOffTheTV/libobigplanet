@@ -15,16 +15,27 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file endianness.hpp
+ * @brief Defines byte-swapping functions
+ * @author Peyton Anderson (peyton@turnoffthetv.xyz)
+ */
+
 #ifndef ENDIANNESS_HPP
 #define ENDIANNESS_HPP
 
 #include <bit>
 #include <concepts>
 
+/**
+ * @brief libobigplanet
+ */
 namespace LBP {
 
-	template <std::integral T>
-	constexpr T inline bigToSystem(T num){
+	/**
+	 * @brief Swap from big endian to system endianness, AKA swap endianness if on little-endian system
+	 */
+	template <std::integral T> constexpr T inline bigToSystem(T num){
 		if constexpr(std::endian::native==std::endian::little){
 			return std::byteswap(num);
 		}else{
@@ -32,8 +43,10 @@ namespace LBP {
 		}
 	}
 
-	template <std::integral T>
-	constexpr T inline littleToSystem(T num){
+	/**
+	 * @brief Swap from little endian to system endianness, AKA swap endianness if on big-endian system
+	 */
+	template <std::integral T> constexpr T inline littleToSystem(T num){
 		if constexpr(std::endian::native==std::endian::big){
 			return std::byteswap(num);
 		}else{

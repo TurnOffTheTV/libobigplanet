@@ -15,13 +15,25 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file guid.hpp
+ * @brief Defines GUID type
+ * @author Peyton Anderson (peyton@turnoffthetv.xyz)
+ */
+
 #ifndef GUID_HPP
 #define GUID_HPP
 
 #include <cstdint>
 
+/**
+ * @brief libobigplanet
+ */
 namespace LBP {
 
+	/**
+	 * @brief Resource GUID
+	 */
 	typedef uint32_t GUID;
 
 };

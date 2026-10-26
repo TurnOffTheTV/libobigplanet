@@ -24,7 +24,7 @@
 
 using namespace LBP;
 
-MapEntry Map::constructEntry(std::filesystem::path path,uint64_t timestamp,uint32_t size,std::string hash,uint32_t guid){
+MapEntry Map::constructEntry(std::filesystem::path path,uint64_t timestamp,uint32_t size,std::string hash,GUID guid){
 	MapEntry newEntry;
 	newEntry.path=path;
 	newEntry.timestamp=timestamp;
@@ -158,7 +158,7 @@ void Map::write(std::iostream& stream){
 		delete[] hashBuffer;
 
 		//Write GUID
-		uint32_t guid = bigToSystem(_entries[i].guid);
+		GUID guid = bigToSystem(_entries[i].guid);
 		stream.write(reinterpret_cast<char*>(&guid),sizeof(guid));
 
 	}
@@ -187,7 +187,7 @@ void Map::removeEntry(uint32_t index){
 
 }
 
-uint32_t Map::getEntryIndexByGuid(uint32_t guid){
+uint32_t Map::getEntryIndexByGuid(GUID guid){
 
 	if(!_guidIndices.contains(guid)) throw lbp_error("GUID not found");
 	return _guidIndices[guid];

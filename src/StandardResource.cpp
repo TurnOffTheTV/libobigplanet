@@ -96,7 +96,7 @@ void StandardResource::load(std::iostream& stream){
 				memcpy(&size,fileDataBuffer,sizeof(size));
 				size=bigToSystem(size);
 				offset+=sizeof(size);
-				btea(fileDataBuffer+offset,size,true,TEA_KEY);
+				xxtea(fileDataBuffer+offset,size,true,TEA_KEY);
 
 			}
 

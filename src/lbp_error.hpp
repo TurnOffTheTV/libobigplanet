@@ -15,13 +15,25 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file lbp_error.hpp
+ * @brief Defines lbp_error class
+ * @author Peyton Anderson (peyton@turnoffthetv.xyz)
+ */
+
 #ifndef LBP_ERROR_HPP
 #define LBP_ERROR_HPP
 
 #include <stdexcept>
 
+/**
+ * @brief libobigplanet
+ */
 namespace LBP {
 
+	/**
+	 * @brief libobigplanet runtime error
+	 */
 	class lbp_error : public std::runtime_error {
 		public:
 			using std::runtime_error::runtime_error; 

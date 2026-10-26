@@ -15,6 +15,12 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file hex.hpp
+ * @brief Defines hex string conversion functions
+ * @author Peyton Anderson (peyton@turnoffthetv.xyz)
+ */
+
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
@@ -24,8 +30,17 @@
 #include <sstream>
 #include <string>
 
+/**
+ * @brief libobigplanet
+ */
 namespace LBP {
 
+	/**
+	 * @brief Create a hex string from a buffer
+	 * @param buffer Buffer to read
+	 * @param length Length of buffer
+	 * @returns Hex string of data
+	 */
 	inline std::string bufferToHexString(uint8_t* buffer,size_t length){
 		std::ostringstream hexStream;
 		hexStream << std::hex << std::setfill('0'); 
@@ -36,6 +51,12 @@ namespace LBP {
 		return hexStream.str();
 	}
 
+	/**
+	 * @brief Convert data from a hex string
+	 * @param hex Hex string
+	 * @param length Variable to set to final buffer length
+	 * @returns Pointer to data buffer
+	 */
 	inline char* hexStringToBuffer(std::string hex,size_t& length){
 
 		length=hex.length()/2;

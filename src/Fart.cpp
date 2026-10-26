@@ -50,8 +50,8 @@ void Fart::load(std::iostream& stream){
 	if(strncmp(header+8,"FAR",3)) throw lbp_error("Magic mismatch");
 	_fartType=(FartType)header[11];
 
-	//FAR5 is only for LBP Vita, always little-endian and has fragments
-	if(_fartType==FAR5){
+	//FartType::FAR5 is only for LBP Vita, always little-endian and has fragments
+	if(_fartType==FartType::FAR5){
 		_littleEndian=true;
 		memcpy(&_numFragments,header,4);
 		_numFragments=littleToSystem(_numFragments);
@@ -67,7 +67,7 @@ void Fart::load(std::iostream& stream){
 
 	//Check FART types
 	//I've personally only seen types C and 4, but cwlib supports types 2,3, and 5
-	if(_fartType!=FARC && _fartType!=FAR2 && _fartType!=FAR3 && _fartType!=FAR4 && _fartType!=FAR5) throw lbp_error("Invalid FART type");
+	if(_fartType!=FartType::FARC && _fartType!=FartType::FAR2 && _fartType!=FartType::FAR3 && _fartType!=FartType::FAR4 && _fartType!=FartType::FAR5) throw lbp_error("Invalid FART type");
 
 	delete[] header;
 
@@ -99,22 +99,22 @@ void Fart::load(std::iostream& stream){
 
 	}
 
-	//Read file hash if it exists (FAR3+)
-	if(_fartType==FAR3 || _fartType==FAR4 || _fartType==FAR5) stream.read(reinterpret_cast<char*>(_hash),20);
+	//Read file hash if it exists (FartType::FAR3+)
+	if(_fartType==FartType::FAR3 || _fartType==FartType::FAR4 || _fartType==FartType::FAR5) stream.read(reinterpret_cast<char*>(_hash),20);
 
 
-	//Read save key if not FARC
-	if(_fartType!=FARC){
+	//Read save key if not FartType::FARC
+	if(_fartType!=FartType::FARC){
 
 		stream.seekg(-(int)(_getHeaderSize()+_getFatSize()+_getSaveKeySize()),std::ios::end);
 
-		if(_fartType==FAR4 || _fartType==FAR5){
+		if(_fartType==FartType::FAR4 || _fartType==FartType::FAR5){
 
 			//Read revision
 			stream.read(reinterpret_cast<char*>(_saveInfo.revision),8);
 
 			//Read fragments
-			if(_fartType==FAR5){
+			if(_fartType==FartType::FAR5){
 				_fragments = new int32_t[_numFragments];
 				for(size_t i=0;i<_numFragments;i++){
 					stream.read(reinterpret_cast<char*>(&_fragments[i]),sizeof(_fragments[i]));
@@ -160,23 +160,23 @@ void Fart::write(std::iostream& stream){
 
 	//Write files
 	for(unsigned int i=0;i<_numEntries;i++){
-		char* entry = getEntryData(_hashIndices[i]);
-		stream.write(entry,getEntryLength(_hashIndices[i]));
+		uint8_t* entry = getEntryData(_hashIndices[i]);
+		stream.write(reinterpret_cast<char*>(entry),getEntryLength(_hashIndices[i]));
 		delete[] entry;
 	}
 
 	while(stream.tellp()%4) stream.write("\x00",1);
 
 	//Write save key
-	if(_fartType!=FARC){
+	if(_fartType!=FartType::FARC){
 
-		if(_fartType==FAR4 || _fartType==FAR5){
+		if(_fartType==FartType::FAR4 || _fartType==FartType::FAR5){
 
 			//Write revision
 			stream.write(reinterpret_cast<char*>(_saveInfo.revision),8);
 
 			//Write fragments
-			if(_fartType==FAR5){
+			if(_fartType==FartType::FAR5){
 				for(size_t i=0;i<_numFragments;i++){
 					stream.write(reinterpret_cast<char*>(&_fragments[i]),sizeof(_fragments[i]));
 				}
@@ -239,11 +239,11 @@ void Fart::write(std::iostream& stream){
 
 	}
 
-	//Write file hash if FARC3+
-	if(_fartType==FAR3 || _fartType==FAR4 || _fartType==FAR5) stream.write(reinterpret_cast<char*>(_hash),20);
+	//Write file hash if FartType::FARC3+
+	if(_fartType==FartType::FAR3 || _fartType==FartType::FAR4 || _fartType==FartType::FAR5) stream.write(reinterpret_cast<char*>(_hash),20);
 
 	//Write fragment count
-	if(_fartType==FAR5){
+	if(_fartType==FartType::FAR5){
 		uint32_t writtenNumFragments = littleToSystem(_numFragments);
 		stream.write(reinterpret_cast<char*>(&writtenNumFragments),sizeof(writtenNumFragments));
 	}
@@ -255,7 +255,7 @@ void Fart::write(std::iostream& stream){
 
 	//Write magic
 	std::string magic = "FAR";
-	magic+=_fartType;
+	magic+=(char)_fartType;
 	stream.write(magic.c_str(),4);
 
 }
@@ -265,17 +265,17 @@ unsigned int Fart::getEntryLength(std::string hash){
 	return _entries[hash].length;
 }
 
-char* Fart::getEntryData(std::string hash){
+uint8_t* Fart::getEntryData(std::string hash){
 
 	if(!_entries.contains(hash)) throw lbp_error("Hash not found in FART");
 
 	//Allocate entry data buffer
-	char* buffer = new char[_entries[hash].length];
+	uint8_t* buffer = new uint8_t[_entries[hash].length];
 
 	//Get data from FART source
 	_entries[hash].stream->clear();
 	_entries[hash].stream->seekg(_entries[hash].offset,std::ios::beg);
-	_entries[hash].stream->read(buffer,_entries[hash].length);
+	_entries[hash].stream->read(reinterpret_cast<char*>(buffer),_entries[hash].length);
 
 	return buffer;
 
@@ -331,28 +331,28 @@ void Fart::removeEntry(std::string hash){
 
 uint32_t Fart::getSaveUserId(){
 
-	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	if(_fartType==FartType::FARC) throw lbp_error("FartType::FARC does not have save info");
 	return _saveInfo.userId;
 
 }
 
 int32_t Fart::getSaveCopied(){
 
-	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	if(_fartType==FartType::FARC) throw lbp_error("FartType::FARC does not have save info");
 	return _saveInfo.copied;
 
 }
 
-uint32_t Fart::getSaveType(){
+ResourceType Fart::getSaveType(){
 
-	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	if(_fartType==FartType::FARC) throw lbp_error("FartType::FARC does not have save info");
 	return _saveInfo.saveType;
 
 }
 
 std::string Fart::getSaveFileHash(){
 
-	if(_fartType==FARC) throw lbp_error("FARC does not have save info");
+	if(_fartType==FartType::FARC) throw lbp_error("FartType::FARC does not have save info");
 	return _saveInfo.fileHash;
 
 }
@@ -366,7 +366,7 @@ void Fart::setSaveFileHash(std::string hash){
 
 size_t Fart::_getHeaderSize(){
 
-	if(_fartType==FAR5) return 12;
+	if(_fartType==FartType::FAR5) return 12;
 	return 8;
 
 }
@@ -374,20 +374,20 @@ size_t Fart::_getHeaderSize(){
 size_t Fart::_getFatSize(){
 
 	unsigned int fatSize = _numEntries*28;
-	if(_fartType==FAR3 || _fartType==FAR4 || _fartType==FAR5) fatSize+=20;//Including file hash in FAT even though it's not really
+	if(_fartType==FartType::FAR3 || _fartType==FartType::FAR4 || _fartType==FartType::FAR5) fatSize+=20;//Including file hash in FAT even though it's not really
 
 	return fatSize;
 }
 
 size_t Fart::_getSaveKeySize(){
 
-	//FARC is not a save, has no save key
-	if(_fartType==FARC) return 0;
+	//FartType::FARC is not a save, has no save key
+	if(_fartType==FartType::FARC) return 0;
 
 	unsigned int saveKeySize = 128;
 
-	if(_fartType==FAR4) saveKeySize+=4;
-	if(_fartType==FAR5) saveKeySize+=8+_numFragments*4;
+	if(_fartType==FartType::FAR4) saveKeySize+=4;
+	if(_fartType==FartType::FAR5) saveKeySize+=8+_numFragments*4;
 
 	return saveKeySize;
 

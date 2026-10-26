@@ -15,6 +15,12 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file xxtea.hpp
+ * @brief Defines XXTEA encryption/decryption function
+ * @author Peyton Anderson (peyton@turnoffthetv.xyz)
+ */
+
 #ifndef XXTEA_HPP
 #define XXTEA_HPP
 
@@ -25,7 +31,14 @@ namespace LBP {
 	inline constexpr uint32_t DELTA = 0x9e3779b9;
 	inline constexpr uint32_t TEA_KEY[] = {0x01B70CBD,0x149607D6,0x07F94DD5,0x10DB8CA0};
 
-	inline void btea(uint8_t* data,size_t length,bool shouldDecrypt,const uint32_t key[4]) {
+	/**
+	 * @brief Encrypt/decrypt a buffer in place using XXTEA
+	 * @param data Pointer to data to encrypt/decrypt
+	 * @param length Length of data to encrypt/decrypt
+	 * @param shouldDecrypt Wether to decrypt instead of encrypt
+	 * @param key Encryption/decryption key to use
+	 */
+	inline void xxtea(uint8_t* data,size_t length,bool shouldDecrypt,const uint32_t key[4]) {
 
 		uint8_t padding = 4-(length%4);
 		length+=padding;
