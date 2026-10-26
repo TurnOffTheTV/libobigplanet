@@ -6,7 +6,7 @@ project(libobigplanet VERSION 0.3.0)
 file(GLOB SRCS src/*.cpp)
 file(GLOB INCLUDES include/*.hpp)
 
-add_library(libobigplanet STATIC ${SRCS})
+add_library(libobigplanet STATIC ${SRCS} ${INCLUDES})
 set_target_properties(libobigplanet PROPERTIES PREFIX "")
 target_include_directories(libobigplanet 
 	PUBLIC 
