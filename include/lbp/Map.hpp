@@ -103,6 +103,19 @@ namespace LBP {
 
 
 			/**
+			 * @brief Get map revision
+			 * @returns Map revision
+			 */
+			uint32_t getRevision(){return _revision;}
+
+			/**
+			 * @brief Set map revision
+			 * @param revision Map revision
+			 */
+			void setRevision(uint32_t revision){_revision=revision;}
+
+
+			/**
 			 * @brief Get number of entries in MAP
 			 * @returns Number of entries
 			 */
